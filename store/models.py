@@ -35,6 +35,16 @@ class Customer(models.Model):
         default=MEMBERSHIP_BRONZE)
 
 
+class Address(models.Model):
+    """ This is the address model class """
+    street = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    customer = models.OneToOneField(
+        Customer,
+        on_delete=models.CASCADE,
+        primary_key=True)
+
+
 class Order(models.Model):
     """ This is the Order model class """
     PAYMENT_STATUS_PENDING = 'P'
