@@ -9,6 +9,9 @@ class Tag(models.Model):
     """ This the the Tag model class """
     label = models.CharField(max_length=255)
 
+    def __str__(self) -> str:
+        return f'{self.label}'
+
 
 class TagItem(models.Model):
     """ This is the TagItem model class """

@@ -5,6 +5,9 @@ from django.http.request import HttpRequest
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
+from django.contrib.contenttypes.admin import GenericTabularInline
+
+from tags.models import TagItem
 
 from . import models
 
@@ -46,9 +49,16 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt=10)
 
 
+class TagInline(GenericTabularInline):
+    """ Tag item inline show order """
+    autocomplete_fields = ['tag']
+    model = TagItem
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Product admin class """
+    inlines = [TagInline]
     autocomplete_fields = ['collection']
     prepopulated_fields = {
         'slug': ['title']
