@@ -13,6 +13,7 @@ from . import models
 class CollectionAdmin(admin.ModelAdmin):
     """ Collection admin class """
     list_display = ['title', 'products_count']
+    search_fields = ['title']
 
     @admin.display(ordering='products_count')
     def products_count(self, collection):
@@ -48,6 +49,10 @@ class InventoryFilter(admin.SimpleListFilter):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Product admin class """
+    autocomplete_fields = ['collection']
+    prepopulated_fields = {
+        'slug': ['title']
+    }
     actions = ['clear_inventory']
     list_display = ['title', 'unit_price',
                     'inventory_status', 'collection_title']
@@ -110,3 +115,4 @@ class CustomerAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     """ OrderAdmin admin class """
     list_display = ['id', 'placed_at', 'customer']
+    autocomplete_fields = ['customer']
