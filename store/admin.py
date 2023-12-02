@@ -8,9 +8,17 @@ admin.site.register(models.Collection)
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Product admin class """
-    list_display = ['title', 'unit_price']
+    list_display = ['title', 'unit_price', 'inventory_status']
     list_editable = ['unit_price']
     list_per_page = 10
+
+    # if you want to add sort available to this column, you should add this decorator
+    @admin.display(ordering='inventory')
+    def inventory_status(self, product):
+        """ Customizing inventory field """
+        if product.inventory < 10:
+            return 'Low'
+        return 'OK'
 
 # this is the second way to define admin class
 # admin.site.register(models.Product, ProductAdmin)
