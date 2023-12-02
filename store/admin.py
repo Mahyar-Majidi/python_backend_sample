@@ -8,9 +8,16 @@ admin.site.register(models.Collection)
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Product admin class """
-    list_display = ['title', 'unit_price', 'inventory_status']
+    list_display = ['title', 'unit_price',
+                    'inventory_status', 'collection_title']
     list_editable = ['unit_price']
     list_per_page = 10
+    # eager load collection model fields to prevent execute extra queries
+    list_select_related = ['collection']
+
+    def collection_title(self, product):
+        """ return some specific field from related model """
+        return product.collection.title
 
     # if you want to add sort available to this column, you should add this decorator
     @admin.display(ordering='inventory')
@@ -31,3 +38,9 @@ class CustomerAdmin(admin.ModelAdmin):
     list_editable = ['membership']
     ordering = ['first_name', 'last_name']
     list_per_page = 10
+
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    """ OrderAdmin admin class """
+    list_display = ['id', 'placed_at', 'customer']

@@ -67,6 +67,13 @@ class Customer(models.Model):
         choices=MEMBERSHIP_CHOICES,
         default=MEMBERSHIP_BRONZE)
 
+    def __str__(self) -> str:
+        return f'{self.first_name} {self.last_name}'
+
+    class Meta:
+        """ Customer Meta class """
+        ordering = ['first_name', 'last_name']
+
 
 class Order(models.Model):
     """ This is the Order model class """
