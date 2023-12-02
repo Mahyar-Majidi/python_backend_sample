@@ -1,10 +1,30 @@
+from typing import Any
 from django.contrib import admin
+from django.db.models.query import QuerySet
+from django.http.request import HttpRequest
+from django.db.models import Count
+
 from . import models
 
-admin.site.register(models.Collection)
 
+@admin.register(models.Collection)
+class CollectionAdmin(admin.ModelAdmin):
+    """ Collection admin class """
+    list_display = ['title', 'products_count']
+
+    @admin.display(ordering='products_count')
+    def products_count(self, collection):
+        """ return some extra field from model the actually don't exist on model field"""
+        return collection.products_count
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        return super().get_queryset(request).annotate(
+            products_count=Count('product')
+        )
 
 # define the admin class
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Product admin class """
