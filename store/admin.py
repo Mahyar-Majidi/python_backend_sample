@@ -30,12 +30,28 @@ class CollectionAdmin(admin.ModelAdmin):
 # define the admin class
 
 
+class InventoryFilter(admin.SimpleListFilter):
+    """ Create customize search in admin control panel for Product """
+    title = 'inventory'
+    parameter_name = 'inventory'
+
+    def lookups(self, request: Any, model_admin: Any) -> list[tuple[Any, str]]:
+        return [
+            ('<10', 'Low')
+        ]
+
+    def queryset(self, request: Any, queryset: QuerySet[Any]):
+        if self.value() == "<10":
+            return queryset.filter(inventory__lt=10)
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     """ Product admin class """
     list_display = ['title', 'unit_price',
                     'inventory_status', 'collection_title']
     list_editable = ['unit_price']
+    list_filter = ['collection', 'last_update', InventoryFilter]
     list_per_page = 10
     # eager load collection model fields to prevent execute extra queries
     list_select_related = ['collection']
