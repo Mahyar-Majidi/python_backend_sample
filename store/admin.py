@@ -111,6 +111,16 @@ class CustomerAdmin(admin.ModelAdmin):
         )
 
 
+# you can use StackedInline instate of TabularInline
+class OrderItemInline(admin.TabularInline):
+    """ this class order orderItem field in admin page """
+    autocomplete_fields = ['product']
+    model = models.OrderItem
+    extra = 0
+    min_num = 1
+    max_num = 10
+
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     """ OrderAdmin admin class """
