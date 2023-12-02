@@ -18,6 +18,13 @@ class Collection(models.Model):
         related_name='+'
     )
 
+    def __str__(self) -> str:
+        return str(self.title)
+
+    class Meta:
+        """ Collection Meta class """
+        ordering = ['title']
+
 
 class Product(models.Model):
     """ This the product model class """
@@ -29,6 +36,13 @@ class Product(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
     promotions = models.ManyToManyField(Promotion)
+
+    def __str__(self) -> str:
+        return str(self.title)
+
+    class Meta:
+        """ Product Meta class """
+        ordering = ['title']
 
 
 class Customer(models.Model):
