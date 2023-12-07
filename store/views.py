@@ -5,26 +5,21 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from .models import Collection, Product
 from .serializer import CollectionSerializer, ProductSerializer
 
 # Create your views here.
 
 
-class ProductList(ListCreateAPIView):
-    """ Product view class """
-    queryset = Product.objects.select_related('collection').all()
-    serializer_class = ProductSerializer
-
-    def get_serializer_context(self):
-        return {'request': self.request}
-
-
-class ProductDetail(RetrieveUpdateDestroyAPIView):
-    """ Product detail class """
+class ProductViewSet(ModelViewSet):
+    """ Product View Set """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'id'
+
+    def get_serializer_class(self):
+        return {'request': self.request}
 
     def delete(self, request, id):
         product = get_object_or_404(Product, pk=id)
@@ -34,16 +29,11 @@ class ProductDetail(RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CollectionList(ListCreateAPIView):
-    """ Collection list view class """
+class CollectionViewSet(ModelViewSet):
+    """ Collection view set """
     queryset = Collection.objects.annotate(
-        products_count=Count('products')).all()
-    serializer_class = CollectionSerializer
-
-
-class CollectionDetail(RetrieveUpdateDestroyAPIView):
-    """ Collection detail view class """
-    queryset = Collection.objects.annotate(products_count=Count('products'))
+        products_count=Count('products').all()
+    )
     serializer_class = CollectionSerializer
 
     def delete(self, request, pk):
@@ -55,4 +45,3 @@ class CollectionDetail(RetrieveUpdateDestroyAPIView):
             )
         collection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
- 
