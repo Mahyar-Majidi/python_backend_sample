@@ -137,4 +137,4 @@ class Review(models.Model):
         Product, on_delete=models.CASCADE, related_name='reviews')
     name = models.CharField(max_length=255)
     description = models.TextField()
-    data = models.DateField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
