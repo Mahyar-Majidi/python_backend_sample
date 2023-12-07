@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
-from .models import Collection, OrderItem, Product
-from .serializer import CollectionSerializer, ProductSerializer
+from .models import Collection, OrderItem, Product, Review
+from .serializer import CollectionSerializer, ProductSerializer, ReviewSerializer
 
 # Create your views here.
 
@@ -41,3 +41,9 @@ class CollectionViewSet(ModelViewSet):
                 status=status.HTTP_204_NO_CONTENT
             )
         return super().destroy(request, *args, **kwargs)
+
+
+class ReviewViewSet(ModelViewSet):
+    """ Review view set """
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
