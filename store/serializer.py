@@ -105,3 +105,9 @@ class AddCartItemSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'No product with the given ID was found.')
         return value
+
+
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['quantity']
