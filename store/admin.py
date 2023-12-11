@@ -92,8 +92,10 @@ class CustomerAdmin(admin.ModelAdmin):
     """ Customer admin class """
     list_display = ['first_name', 'last_name', 'membership', 'order_count']
     list_editable = ['membership']
-    ordering = ['first_name', 'last_name']
-    search_fields = ['first_name__istartswith', 'last_name__istartswith']
+    list_select_related = ['user']
+    ordering = ['user__first_name', 'user__last_name']
+    search_fields = ['user__first_name__istartswith',
+                     'user__last_name__istartswith']
     list_per_page = 10
 
     @admin.display(ordering='order_count')
@@ -109,8 +111,21 @@ class CustomerAdmin(admin.ModelAdmin):
             order_count=Count('order')
         )
 
+    @admin.display(ordering='user__first_name')
+    def first_name(self, customer):
+        if customer.user is None:
+            return ""
+        return customer.user.first_name
+
+    @admin.display(ordering='user__last_name')
+    def last_name(self, customer):
+        if customer.user is None:
+            return ""
+        return customer.user.last_name
 
 # you can use StackedInline instate of TabularInline
+
+
 class OrderItemInline(admin.TabularInline):
     """ this class order orderItem field in admin page """
     autocomplete_fields = ['product']
