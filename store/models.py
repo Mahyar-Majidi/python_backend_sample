@@ -79,6 +79,8 @@ class Customer(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self) -> str:
+        if self.user is None:
+            return ""
         return f'{self.user.first_name} {self.user.last_name}'
 
     class Meta:
@@ -115,7 +117,8 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     """ This is the OrderItem Model class """
-    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    order = models.ForeignKey(
+        Order, on_delete=models.PROTECT, related_name='items')
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name='orderitems')
     quantity = models.PositiveBigIntegerField()
