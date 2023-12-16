@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
@@ -141,10 +142,15 @@ class OrderViewSet(ModelViewSet):
         return Order.objects.prefetch_related(
             'items__product').filter(customer_id=customer_id)
 
-    def get_serializer_context(self):
-        return {'user_id': self.request.user.id}
-
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateOrderSerializer
         return OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = CreateOrderSerializer(data=request.data, context={
+                                           'user_id': self.request.user.id})
+        serializer.is_valid(raise_exception=True)
+        order = serializer.save()
+        serializer = OrderSerializer(order)
+        return Response(serializer.data)
