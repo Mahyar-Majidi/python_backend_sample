@@ -21,7 +21,7 @@ from .serializer import AddCartItemSerializer, CartItemSerializer, CartSerialize
 
 class ProductViewSet(ModelViewSet):
     """ Product View Set """
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related('images').all().order_by('id')
     serializer_class = ProductSerializer
     # fot get info about filtering, go to google and search 'django filters' and click on link that is associated with django site
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
